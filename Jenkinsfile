@@ -2,22 +2,34 @@ pipeline {
     agent any
 
     stages {
+        stage('Setup Virtual Environment') {
+            steps {
+                sh '''
+                python3 -m venv venv
+                source venv/bin/activate
+                '''
+            }
+        }
         stage('Build') {
             steps {
-                // Install dependencies
-                sh 'pip install -r requirements.txt'
+                sh '''
+                source venv/bin/activate
+                pip install -r requirements.txt
+                '''
             }
         }
         stage('Test') {
             steps {
-                // Run unit tests
-                sh 'python -m unittest discover'
+                sh '''
+                source venv/bin/activate
+                python -m unittest discover
+                '''
             }
         }
         stage('Deploy') {
             steps {
-                // Mock deployment by copying files
                 sh '''
+                source venv/bin/activate
                 mkdir -p /path/to/deployment/directory
                 cp -r * /path/to/deployment/directory/
                 '''
